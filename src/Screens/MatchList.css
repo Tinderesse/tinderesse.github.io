@@ -1,0 +1,6 @@
+.Match-container {
+  flex: 1;
+  display: flex;
+  margin: 5% 5% 0 5%;
+  flex-direction: column;
+}
