@@ -1,0 +1,42 @@
+.Profile-container {
+  flex: 1;
+  display: flex;
+  margin: 5% 5% 0 5%;
+  flex-direction: column;
+}
+
+.Profile-info {
+  margin: 16px 16px 0px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.Profile-picture-wrapper {
+  height: 140px;
+  width: 140px;
+  background-color: grey;
+  align-self: center;
+}
+
+.Profile-flex-full {
+  flex: 1;
+  display: flex;
+}
+
+.Profile-form-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-left: 8px;
+  margin-top: 12px;
+}
+
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .Profile-info {
+    flex-direction: row;
+  }
+  .Profile-form-wrapper {
+    margin-top: 0px;
+  }
+}
