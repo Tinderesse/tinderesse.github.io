@@ -1,0 +1,23 @@
+.Find-container {
+  flex: 1;
+  display: flex;
+  padding: 5% 5% 0 5%;
+  flex-direction: column;
+}
+
+.Find-text-container {
+  margin: 16px;
+  margin-bottom: 42px;
+}
+
+.Find-text-style {
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+}
+
+@media only screen and (min-width: 768px) {
+  .Find-text-container {
+    margin: 16px 74px 8px 74px;
+  }
+}
