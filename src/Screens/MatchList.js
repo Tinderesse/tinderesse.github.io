@@ -3,10 +3,9 @@ import Typography from "@material-ui/core/Typography";
 import "./MatchList.css";
 import MatchItem from "../Components/MatchItem";
 import InfoLine from "../Components/InfoLine";
-import MockList from "../mock.json";
 
 const MatchList = props => {
-  const matchList = MockList;
+  const matchList = JSON.parse(localStorage.getItem("matchList")) || {};
   const keys = Object.keys(matchList);
   return (
     <div className="Match-container">

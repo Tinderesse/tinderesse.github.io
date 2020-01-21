@@ -29,6 +29,13 @@ const FindStudents = props => {
   };
 
   const handleLike = () => {
+    const matchList = JSON.parse(localStorage.getItem("matchList")) || {};
+    matchList[student] = {
+      name: StudentList[student].name,
+      whatsapp: StudentList[student].whatsapp,
+      image: StudentList[student].image
+    };
+    localStorage.setItem("matchList", JSON.stringify(matchList));
     nextStudent();
   };
 

@@ -2,15 +2,20 @@ import React from "react";
 import Typography from "@material-ui/core/Typography";
 import { TextField } from "@material-ui/core";
 import { Button } from "@material-ui/core";
+import axios from "axios";
 import "./Profile.css";
 
 const Profile = props => {
   const defaultImage = "https://avatars2.githubusercontent.com/u/54108471?v=4";
-  const [name, setName] = React.useState("");
-  const [whatsapp, setWhatsapp] = React.useState("");
-  const [bio, setBio] = React.useState("");
-  const [image, setImage] = React.useState(defaultImage);
-  const [gitHubUser, setGitHubUser] = React.useState("");
+  const storageData = JSON.parse(localStorage.getItem("userData")) || {};
+
+  const [name, setName] = React.useState(storageData.gitHubUser || "");
+  const [whatsapp, setWhatsapp] = React.useState(storageData.whatsapp || "");
+  const [bio, setBio] = React.useState(storageData.bio || "");
+  const [image, setImage] = React.useState(storageData.image || defaultImage);
+  const [gitHubUser, setGitHubUser] = React.useState(
+    storageData.gitHubUser || ""
+  );
 
   const handleGitHubUserChange = event => {
     setGitHubUser(event.target.value);
@@ -29,11 +34,26 @@ const Profile = props => {
   };
 
   const saveChanges = () => {
+    const userData = { gitHubUser, name, whatsapp, bio, image };
+    localStorage.setItem("userData", JSON.stringify(userData));
+
     console.log("Cliquei em save");
   };
 
   const getGitHub = () => {
     console.log("Cliquei em pegar GitHub");
+    axios
+      .get("https://api.github.com/users/" + gitHubUser)
+      .then(function(response) {
+        const { data } = response;
+        const { name, bio, avatar_url, followers, public_repos } = data;
+        name && setName(name);
+        bio && setBio(bio);
+        avatar_url && setImage(avatar_url);
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
   };
 
   return (
