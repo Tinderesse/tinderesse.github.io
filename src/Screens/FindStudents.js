@@ -3,13 +3,14 @@ import Typography from "@material-ui/core/Typography";
 import StudentCard from "../Components/StudentCard";
 import StudentBrief from "../Components/StudentBrief";
 import "./FindStudents.css";
-import { getUsers, likeUser } from "../Service/Firestore";
+import { getUsers, likeUser, checkLikes, setMatch } from "../Service/Firestore";
 
 const FindStudents = props => {
   const [index, setIndex] = useState(0);
   const [student, setStudent] = useState();
   const [keys, setKeys] = useState();
   const [StudentList, setStudentList] = useState();
+  const [isMatchHappening, setIsMatchHappening] = useState(false);
 
   const userData = JSON.parse(localStorage.getItem("userData")) || {};
   const { gitHubUser } = userData;
@@ -21,7 +22,8 @@ const FindStudents = props => {
 
   const initStudentList = async () => {
     const userKeys = await getUsersKeys();
-    setKeys(userKeys);
+    const StudentsExceptMe = userKeys.filter(student => student !== gitHubUser);
+    setKeys(StudentsExceptMe);
     setStudentList(await getUsers());
     setStudent(userKeys[0]);
   };
@@ -36,7 +38,8 @@ const FindStudents = props => {
     setStudent(keys[newIndex]);
   };
 
-  const handleLike = () => {
+  const handleMatch = (student, myId) => {
+    setIsMatchHappening(true);
     const matchList = JSON.parse(localStorage.getItem("matchList")) || {};
     matchList[student] = {
       name: StudentList[student].name,
@@ -44,9 +47,23 @@ const FindStudents = props => {
       image: StudentList[student].image
     };
     localStorage.setItem("matchList", JSON.stringify(matchList));
-    likeUser(StudentList[student], gitHubUser);
+    setMatch(StudentList[student], myId);
+    setTimeout(() => {
+      setIsMatchHappening(false);
+      nextStudent();
+    }, 3000);
+  };
 
-    nextStudent();
+  const handleLike = async () => {
+    likeUser(StudentList[student], gitHubUser);
+    const myLikes = await checkLikes(gitHubUser);
+    const isStudenInMylikesList =
+      myLikes && myLikes[StudentList[student].gitHubUser];
+    if (isStudenInMylikesList) {
+      handleMatch(student, gitHubUser);
+    } else {
+      nextStudent();
+    }
   };
 
   return (
@@ -59,8 +76,12 @@ const FindStudents = props => {
           handleLike={handleLike}
         >
           <StudentBrief
-            name={StudentList[student].name}
-            bio={StudentList[student].bio}
+            name={isMatchHappening ? "Parabéns" : StudentList[student].name}
+            bio={
+              isMatchHappening
+                ? "Você conseguiu um match! Confira agora na sua aba de matches."
+                : StudentList[student].bio
+            }
           />
         </StudentCard>
       )}
