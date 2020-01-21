@@ -26,6 +26,14 @@ const FindStudents = props => {
     setKeys(StudentsExceptMe);
     setStudentList(await getUsers());
     setStudent(userKeys[0]);
+
+    navigator.geolocation.getCurrentPosition(position => {
+      console.log(
+        "Localização do usuário",
+        position.coords.latitude,
+        position.coords.longitude
+      );
+    });
   };
 
   useEffect(() => {
@@ -48,6 +56,9 @@ const FindStudents = props => {
     };
     localStorage.setItem("matchList", JSON.stringify(matchList));
     setMatch(StudentList[student], myId);
+    if (navigator.vibrate) {
+      navigator.vibrate([200, 200, 400, 400, 800, 800, 200, 200]);
+    }
     setTimeout(() => {
       setIsMatchHappening(false);
       nextStudent();
