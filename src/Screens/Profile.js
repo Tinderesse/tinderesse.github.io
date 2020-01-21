@@ -4,12 +4,13 @@ import { TextField } from "@material-ui/core";
 import { Button } from "@material-ui/core";
 import axios from "axios";
 import "./Profile.css";
+import { setUser } from "../Service/Firestore";
 
 const Profile = props => {
   const defaultImage = "https://avatars2.githubusercontent.com/u/54108471?v=4";
   const storageData = JSON.parse(localStorage.getItem("userData")) || {};
 
-  const [name, setName] = React.useState(storageData.gitHubUser || "");
+  const [name, setName] = React.useState(storageData.name || "");
   const [whatsapp, setWhatsapp] = React.useState(storageData.whatsapp || "");
   const [bio, setBio] = React.useState(storageData.bio || "");
   const [image, setImage] = React.useState(storageData.image || defaultImage);
@@ -36,12 +37,10 @@ const Profile = props => {
   const saveChanges = () => {
     const userData = { gitHubUser, name, whatsapp, bio, image };
     localStorage.setItem("userData", JSON.stringify(userData));
-
-    console.log("Cliquei em save");
+    setUser(userData);
   };
 
   const getGitHub = () => {
-    console.log("Cliquei em pegar GitHub");
     axios
       .get("https://api.github.com/users/" + gitHubUser)
       .then(function(response) {

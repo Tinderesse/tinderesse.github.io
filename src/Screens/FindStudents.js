@@ -3,7 +3,7 @@ import Typography from "@material-ui/core/Typography";
 import StudentCard from "../Components/StudentCard";
 import StudentBrief from "../Components/StudentBrief";
 import "./FindStudents.css";
-import MockList from "../mock.json";
+import { getUsers, likeUser } from "../Service/Firestore";
 
 const FindStudents = props => {
   const [index, setIndex] = useState(0);
@@ -11,10 +11,18 @@ const FindStudents = props => {
   const [keys, setKeys] = useState();
   const [StudentList, setStudentList] = useState();
 
+  const userData = JSON.parse(localStorage.getItem("userData")) || {};
+  const { gitHubUser } = userData;
+
+  const getUsersKeys = async () => {
+    const users = await getUsers();
+    return Object.keys(users);
+  };
+
   const initStudentList = async () => {
-    const userKeys = Object.keys(MockList);
+    const userKeys = await getUsersKeys();
     setKeys(userKeys);
-    setStudentList(MockList);
+    setStudentList(await getUsers());
     setStudent(userKeys[0]);
   };
 
@@ -36,6 +44,8 @@ const FindStudents = props => {
       image: StudentList[student].image
     };
     localStorage.setItem("matchList", JSON.stringify(matchList));
+    likeUser(StudentList[student], gitHubUser);
+
     nextStudent();
   };
 
