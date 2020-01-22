@@ -5,6 +5,7 @@ import { Button } from "@material-ui/core";
 import axios from "axios";
 import "./Profile.css";
 import { setUser } from "../Service/Firestore";
+import { requestPermission } from "../Service/PushNotification";
 
 const Profile = props => {
   const defaultImage = "https://avatars2.githubusercontent.com/u/54108471?v=4";
@@ -37,6 +38,7 @@ const Profile = props => {
   const saveChanges = () => {
     const userData = { gitHubUser, name, whatsapp, bio, image };
     localStorage.setItem("userData", JSON.stringify(userData));
+    requestPermission();
     setUser(userData);
   };
 
